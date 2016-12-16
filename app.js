@@ -87,7 +87,7 @@ bot.beginDialogAction('help', '/help', { matches: /^help/i });
 // Bots Dialogs
 //=========================================================
 
-bot.dialog('/', [
+bot.dialog('/hello', [
     function(session) {
         // Send a greeting and show help.
         var card = new builder.HeroCard(session)
