@@ -99,7 +99,7 @@ bot.dialog('/', [
         var msg = new builder.Message(session).attachments([card]);
         session.send(msg);
         session.send("Hi... I'm Your Friendly Neighbouhood Bartender. Feel free to let me know what you are in mood for!!");
-        //session.beginDialog('/help');
+        session.beginDialog('/help');
     },
     function(session, results) {
         // Display menu
