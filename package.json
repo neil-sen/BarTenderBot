@@ -1,15 +1,17 @@
 {
-  "name": "bartenderbot",
-  "version": "1.0.0",
-  "description": "Bar Tender AI Chat Bot",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Neil",
-  "license": "ISC",
-  "dependencies": {
-    "botbuilder": "^3.4.4",
-    "restify": "^4.3.0"
-  }
+    "name": "bartenderbot",
+    "version": "1.0.0",
+    "description": "Bar Tender AI Chat Bot",
+    "main": "index.js",
+    "MICROSOFT_APP_ID": "0602589a-0d50-42a1-9c97-8fbe1846a32d",
+    "MICROSOFT_APP_PASSWORD": "mbEbDPPwKhXfi5VN5zO4BGk",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Neil",
+    "license": "ISC",
+    "dependencies": {
+        "botbuilder": "^3.4.4",
+        "restify": "^4.3.0"
+    }
 }
