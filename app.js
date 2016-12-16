@@ -94,7 +94,7 @@ bot.dialog('/', [
             .title("Intellegent Bartender")
             .text("Friendly Neighbourhood Bartender")
             .images([
-                builder.CardImage.create(session, "https://bot-framework.azureedge.net/bot-icons-v1/iBarTender_9bP6Ny4za9JN64wAh45cwraFnh8bA8q93As20zAAg4xODqo.png")
+                builder.CardImage.create(session, "http://docs.botframework.com/images/demo_bot_image.png")
             ]);
         var msg = new builder.Message(session).attachments([card]);
         session.send(msg);
