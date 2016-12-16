@@ -1,6 +1,6 @@
 {
     "name": "bartenderbot",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Bar Tender AI Chat Bot",
     "main": "index.js",
     "MICROSOFT_APP_ID": "0602589a-0d50-42a1-9c97-8fbe1846a32d",
