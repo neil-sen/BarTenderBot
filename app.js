@@ -57,7 +57,7 @@ bot.on('contactRelationUpdate', function(message) {
         var name = message.user ? message.user.name : null;
         var reply = new builder.Message()
             .address(message.address)
-            .text("Hello %s... Thanks for adding me. Say 'hello' to see some great demos.", name || 'there');
+            .text("Hello %s... Thanks for adding me. ", name || 'there');
         bot.send(reply);
     } else {
         // delete their data
@@ -91,15 +91,15 @@ bot.dialog('/', [
     function(session) {
         // Send a greeting and show help.
         var card = new builder.HeroCard(session)
-            .title("Microsoft Bot Framework")
-            .text("Your bots - wherever your users are talking.")
+            .title("Intellegent Bartender")
+            .text("Friendly Neighbourhood Bartender")
             .images([
-                builder.CardImage.create(session, "http://docs.botframework.com/images/demo_bot_image.png")
+                builder.CardImage.create(session, "https://bot-framework.azureedge.net/bot-icons-v1/iBarTender_9bP6Ny4za9JN64wAh45cwraFnh8bA8q93As20zAAg4xODqo.png")
             ]);
         var msg = new builder.Message(session).attachments([card]);
         session.send(msg);
-        session.send("Hi... I'm the Microsoft Bot Framework demo bot for Skype. I can show you everything you can use our Bot Builder SDK to do on Skype.");
-        session.beginDialog('/help');
+        session.send("Hi... I'm Your Friendly Neighbouhood Bartender. Feel free to let me know what you are in mood for!!");
+        //session.beginDialog('/help');
     },
     function(session, results) {
         // Display menu
@@ -112,7 +112,7 @@ bot.dialog('/', [
 ]);
 bot.dialog('/menu', [
     function(session) {
-        builder.Prompts.choice(session, "What demo would you like to run?", "prompts|picture|cards|list|carousel|receipt|actions|(quit)");
+        builder.Prompts.choice(session, "What kind of Drink would you like?", "Alcoholic|Non-Alcoholic|Water|(quit)");
     },
     function(session, results) {
         if (results.response && results.response.entity != '(quit)') {
