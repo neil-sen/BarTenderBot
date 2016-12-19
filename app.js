@@ -87,18 +87,114 @@ bot.beginDialogAction('help', '/help', { matches: /^help/i });
 // Bots Dialogs
 //=========================================================
 
-bot.dialog('/hello', [
+
+const LuisModelUrl = process.env.LUIS_MODEL_URL ||
+    'https://api.projectoxford.ai/luis/v2.0/apps/8cfbb30c-b00c-4504-8f92-c3fb8e6c4268?subscription-key=40886d6f71cd4959b49b485a588d268a&verbose=true';
+
+// Main dialog with LUIS
+var recognizer = new builder.LuisRecognizer(LuisModelUrl);
+var intents = new builder.IntentDialog({ recognizers: [recognizer] })
+    .matches('orderDrink', [
+        function(session, args, next) {
+            session.send('Welcome to iBar! we are analyzing your request: \'%s\'', session.message.text);
+
+            // try extracting entities
+            var ingredEntity = builder.EntityRecognizer.findEntity(args.entities, 'Ingredient');
+            var tasteEntity = builder.EntityRecognizer.findEntity(args.entities, 'Taste');
+
+
+            next({ response: ingredEntity.entity });
+
+            next({ response: ingredEntity.entity });
+
+
+        },
+        function(session, results) {
+
+            var message = 'Fiding Ingredients:%s as per your taste: %s',
+                ingredEntity, tasteEntity;
+
+            session.send(message, destination);
+
+
+        }
+    ])
+    .matches('namedDrink', (session, args) => {
+        // retrieve hotel name from matched entities
+        var hotelEntity = builder.EntityRecognizer.findEntity(args.entities, 'Hotel');
+        if (hotelEntity) {
+            session.send('Looking for reviews of \'%s\'...', hotelEntity.entity);
+            Store.searchHotelReviews(hotelEntity.entity)
+                .then((reviews) => {
+                    var message = new builder.Message()
+                        .attachmentLayout(builder.AttachmentLayout.carousel)
+                        .attachments(reviews.map(reviewAsAttachment));
+                    session.send(message)
+                });
+        }
+    })
+    .matches('Help', builder.DialogAction.send('Hi! Try asking me things like \'Give me biter-sweet drink with whisky or rum\', \'Give me sour drink with whisky or rum\' or \'Give me cosmopolitan\''))
+    .onDefault((session) => {
+        session.send('Sorry, I did not understand \'%s\'. Type \'help\' if you need assistance.', session.message.text);
+    });
+
+if (process.env.IS_SPELL_CORRECTION_ENABLED == "true") {
+    bot.use({
+        botbuilder: function(session, next) {
+            spellService
+                .getCorrectedText(session.message.text)
+                .then(text => {
+                    session.message.text = text;
+                    next();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    next();
+                });
+        }
+    })
+}
+
+bot.dialog('/', intents);
+
+// Helpers
+function hotelAsAttachment(hotel) {
+    return new builder.HeroCard()
+        .title(hotel.name)
+        .subtitle('%d stars. %d reviews. From $%d per night.', hotel.rating, hotel.numberOfReviews, hotel.priceStarting)
+        .images([new builder.CardImage().url(hotel.image)])
+        .buttons([
+            new builder.CardAction()
+            .title('More details')
+            .type('openUrl')
+            .value('https://www.bing.com/search?q=hotels+in+' + encodeURIComponent(hotel.location))
+        ]);
+}
+
+function reviewAsAttachment(review) {
+    return new builder.ThumbnailCard()
+        .title(review.title)
+        .text(review.text)
+        .images([new builder.CardImage().url(review.image)])
+}
+
+
+
+
+/*
+
+bot.dialog('/', [
     function(session) {
         // Send a greeting and show help.
         var card = new builder.HeroCard(session)
             .title("Intellegent Bartender")
-            .text("Friendly Neighbourhood Bartender")
+            .text("Friendly Bartender")
             .images([
                 builder.CardImage.create(session, "http://docs.botframework.com/images/demo_bot_image.png")
             ]);
         var msg = new builder.Message(session).attachments([card]);
         session.send(msg);
-        session.send("Hi... I'm Your Friendly Neighbouhood Bartender. Feel free to let me know what you are in mood for!!");
+        session.send("Hi... I'm Your Friendly Bartender. Feel free to let me know what you are in mood for!!");
         session.beginDialog('/help');
     },
     function(session, results) {
@@ -135,7 +231,7 @@ bot.dialog('/help', [
     }
 ]);
 
-bot.dialog('/prompts', [
+bot.dialog('/Alcoholic', [
     function(session) {
         session.send("Our Bot Builder SDK has a rich set of built-in prompts that simplify asking the user a series of questions. This demo will walk you through using each prompt. Just follow the prompts and you can quit at any time by saying 'cancel'.");
         builder.Prompts.text(session, "Prompts.text()\n\nEnter some text and I'll say it back.");
@@ -420,4 +516,4 @@ bot.dialog('/weather', [
         session.endDialog("The weather in %s is 71 degrees and raining.", args.data);
     }
 ]);
-bot.beginDialogAction('weather', '/weather'); // <-- no 'matches' option means this can only be triggered by a button.
+bot.beginDialogAction('weather', '/weather'); // <-- no 'matches' option means this can only be triggered by a button.*/
